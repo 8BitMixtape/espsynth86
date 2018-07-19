@@ -11,7 +11,7 @@
 #include "synthtest.h"
 
 #define ENABLE_OTA
-//#define ENABLE_APPLEMIDI
+#define ENABLE_APPLEMIDI
 #define ENABLE_WIFI
 
 #ifdef ENABLE_OTA
@@ -42,8 +42,8 @@ SynthTest mysynth;
 AudioOutputI2S soundOut;
 AnalogMultiplexerPin multiplexer;
 
-char ssid[] = "RUMAH"; //  your network SSID (name)
-char pass[] = "rumah4321";    // your network password (use for WPA, or use as key for WEP)
+char ssid[] = "dusjagrlabs"; //  your network SSID (name)
+char pass[] = "sauhund13";    // your network password (use for WPA, or use as key for WEP)
 
 
 uint8_t phase=0; //Sine phase counter
@@ -237,12 +237,12 @@ void ICACHE_RAM_ATTR onTimerISR() {
 //              DAC = t*(t^t+(t>>pot_control[2]|1)^(t-1280^t)>>10);
 //              DAC = (t*5&t>>7)|(t*3&t>>10);
 //              DAC = (t*9&t>>4|t*5&t>>7|t*3&t/1024)-1;
-//              DAC = (t>>6|t|t>>(t>>potc[2]))*10+((t>>potc[3])&7);
+            DAC = (t>>6|t|t>>(t>>potc[2]))*10+((t>>potc[3])&7);
 //              DAC = (((((DAC)<<potc[0]))));
-//              tc++;
-//              t = tc + INCREMENTS[potc[0]];
+            tc++;
+            t = tc + INCREMENTS[potc[0]];
 
-                DAC = mysynth.run(i);
+               //DAC = mysynth.run(i);
 
 //              i2s_write_lr_nb((((((DAC)<<8) ^ 32768))),0);
 //              i2s_write_lr_nb(DAC^0x8000,0);

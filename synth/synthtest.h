@@ -12,7 +12,7 @@ public:
     ModuleConstant param[8];
 
     SynthTest()
-    {
+    {/*
 //         eq = new EquationBankSobek();
 //         beatbyte = new ModuleEquationPlayer(eq);
 //        ModuleFreeze *freeze = new ModuleFreeze();
@@ -113,6 +113,6 @@ public:
 
 
 
-    }
+   */ }
 };
 #endif // SYNTHTEST_H
