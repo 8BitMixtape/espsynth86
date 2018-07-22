@@ -1,4 +1,5 @@
 Makefile
+WiFiClient_LIFEPATCH/WiFiClient_LIFEPATCH.ino
 global/GlobalChords.cpp
 global/GlobalChords.h
 global/GlobalFilterTables.cpp
@@ -158,6 +159,7 @@ global/globalwavetable.h
 global/globalwavetable.h
 global/globalwavetable.h
 sample/drum_sampler.h
+synth/synthtest2.h
 synthtest.h
 analogmultiplexer.h
 lib/AudioOutput.h

@@ -34,3 +34,4 @@ module
 global
 synth
 sample
+WiFiClient_LIFEPATCH

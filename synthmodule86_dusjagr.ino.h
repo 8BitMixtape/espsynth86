@@ -31,9 +31,9 @@ extern "C" {
 
 SynthTest mysynth;
 
-#define MUX_A D3
-#define MUX_B D2
-#define MUX_C D1
+#define MUX_A D2
+#define MUX_B D1
+#define MUX_C D0
 #define MULTIPLEXED_ANALOG_INPUT A0
 
 #define AUDIOBLOCK_RATE 1450
@@ -54,7 +54,7 @@ uint8_t i2sCNT=32;
 uint16_t DAC=0x8000;
 uint16_t err;
 
-int pot = 3; //what is this?
+int pot = 3;
 Ticker potTimer;
 
 uint32_t t = 0;
@@ -148,7 +148,7 @@ void setup() {
   //Soundcard settings
   soundOut.SetRate(44100);
   soundOut.SetBitsPerSample(16);
-  soundOut.SetChannels(1);
+  soundOut.SetChannels(2);
   soundOut.begin();
 
   //Soundcard timer
@@ -159,17 +159,13 @@ void setup() {
   //Control timer (update pots)
   potTimer.attach_ms(20, onUpdateControl); //Read potentio control at 20ms interval
 
-  //Turn on some LEDs
-  pinMode(D6,OUTPUT);
-  digitalWrite(D6,HIGH);
-
 
 }
 
 void onUpdateControl() {
-    potc[0] =  multiplexer.read(0,10) >> 0;
-    potc[1] =  multiplexer.read(1,10) >> 0;
-    potc[2] =  multiplexer.read(2,10) >> 0;
+    potc[0] =  multiplexer.read(0,10) >> 4;
+    potc[1] =  multiplexer.read(1,10) >> 4;
+    potc[2] =  multiplexer.read(2,10) >> 4;
     potc[3] =  multiplexer.read(3,10) >> 0;
     potc[4] =  multiplexer.read(4,10) >> 0;
     potc[5] =  multiplexer.read(5,10) >> 0;
@@ -235,18 +231,18 @@ void ICACHE_RAM_ATTR onTimerISR() {
         {
             if(!i2s_is_full())
             {
-//              snd =  ((t>>(potc[0]>>4))&(t<<3)/(t*potc[1]*(t>>11)%(3+((t>>(16-(potc[2]>>4)))%22))));
+//              DAC =  ((t>>(potc[0]>>4))&(t<<3)/(t*potc[1]*(t>>11)%(3+((t>>(16-(potc[2]>>4)))%22))));
 //              DAC = (uint16_t) ptah.compute2(potc[3], t, 1+potc[0], 1+potc[2], 1+potc[1]);
 //              DAC = (t*5&t>>potc[0])|(t*3&t>>potc[1]);
-//              DAC = t*(t^t+(t>>pot_control[2]|1)^(t-1280^t)>>10);
-//              DAC = (t*5&t>>7)|(t*3&t>>10);
-//              DAC = (t*9&t>>4|t*5&t>>7|t*3&t/1024)-1;
-//              DAC = (t>>6|t|t>>(t>>potc[2]))*10+((t>>potc[3])&7);
+//              DAC = t*(t^t+(t>>potc[1]|1)^(t-1280^t)>>10);
+//              DAC = (t*potc[0]&t>>7)|(t*3&t>>potc[1]);
+//              DAC = (t*potc[0]&t>>4|t*5&t>>7|t*3&t/potc[1])-1;
+//              DAC = (t>>6|t|t>>(t>>potc[1]))*10+((t>>potc[0])&7);
 //              DAC = (((((DAC)<<potc[0]))));
-//              tc++;
-//              t = tc + INCREMENTS[potc[0]];
+//            tc++;
+//            t = tc + INCREMENTS[potc[2]];
 
-                DAC = mysynth.run(i);
+               DAC = mysynth.run(i);
 
 //              i2s_write_lr_nb((((((DAC)<<8) ^ 32768))),0);
 //              i2s_write_lr_nb(DAC^0x8000,0);
@@ -269,6 +265,8 @@ void ICACHE_RAM_ATTR onTimerISR() {
 }
 
 void loop() {
+
+    //onUpdateControl();
 
 #ifdef ENABLE_OTA
     ArduinoOTA.handle();
