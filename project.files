@@ -159,7 +159,11 @@ global/globalwavetable.h
 global/globalwavetable.h
 global/globalwavetable.h
 sample/drum_sampler.h
-synth/synthtest2.h
+sample/error.h
+sample/lifepats.h
+synth/dusjagr_drone.h
+synthmodule86_dusjagr.ino.h
+synthmodule86_oneliner.ino.h
 synthtest.h
 analogmultiplexer.h
 lib/AudioOutput.h

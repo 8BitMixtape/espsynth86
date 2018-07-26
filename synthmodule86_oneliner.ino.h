@@ -253,10 +253,10 @@ void ICACHE_RAM_ATTR onTimerISR() {
 //              DAC = (t*9&t>>4|t*5&t>>7|t*3&t/1024)-1;
               DAC = (t>>6|t|t>>(t>>potc[2]))*10+((t>>potc[3])&7);
 //              DAC = (((((DAC)<<potc[0]))));
-//              tc++;
+              tc++;
               t = tc + INCREMENTS[potc[0]];
 
-         DAC = mysynth.run(i);
+//                DAC = mysynth.run(i);
 
 //              i2s_write_lr_nb((((((DAC)<<8) ^ 32768))),0);
 //              i2s_write_lr_nb(DAC^0x8000,0);
