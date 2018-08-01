@@ -8,12 +8,12 @@
 #include <i2s_reg.h>
 #include "lib/AudioOutputI2S.h"
 #include "analogmultiplexer.h"
-//#include "synthtest.h"
-#include "dusjagr_drone.h"
+#include "synthtest.h"
 
-//define ENABLE_OTA
+#define ENABLE_OTA
 //#define ENABLE_APPLEMIDI
-//#define ENABLE_WIFI
+#define ENABLE_WIFI
+//#define USE_PDM
 
 #ifdef ENABLE_OTA
 #include <ArduinoOTA.h>
@@ -43,8 +43,8 @@ SynthTest mysynth;
 AudioOutputI2S soundOut;
 AnalogMultiplexerPin multiplexer;
 
-char ssid[] = "LIFEPATCH"; //  your network SSID (name)
-char pass[] = "akurangerti";    // your network password (use for WPA, or use as key for WEP)
+char ssid[] = "RUMAH"; //  your network SSID (name)
+char pass[] = "rumah4321";    // your network password (use for WPA, or use as key for WEP)
 
 
 uint8_t phase=0; //Sine phase counter
@@ -55,7 +55,7 @@ uint8_t i2sCNT=32;
 uint16_t DAC=0x8000;
 uint16_t err;
 
-int pot = 3; //what is this?
+int pot = 1;
 Ticker potTimer;
 
 uint32_t t = 0;
@@ -71,10 +71,23 @@ bool ICACHE_FLASH_ATTR i2s_write_lr_nb(int16_t left, int16_t right){
   return i2s_write_sample_nb(sample);
 }
 
-//#include "EquationBankPtah.h";
-//#include "EquationBankKhepri.h";
+#ifdef USE_PDM
+//PDM From Jan Ostman
+void writeDAC(uint16_t DAC) {
+  for (uint8_t i=0;i<32;i++) {
+    i2sACC=i2sACC<<1;
+    if(DAC >= err) {
+      i2sACC|=1;
+      err += 0xFFFF-DAC;
+    } else {
+      err -= DAC;
+    }
+  }
+  bool flag=i2s_write_sample(i2sACC);
+}
+#endif
 
-//EquationBankPtah ptah;
+
 uint16_t potc[] = {1,1,1,1,1,1,1,1};
 
 //uint16_t sine2[256] = {
@@ -113,7 +126,7 @@ uint16_t potc[] = {1,1,1,1,1,1,1,1};
 //};
 
 
-//Forward declatation
+//Forward declaration
 void ICACHE_RAM_ATTR onTimerISR();
 void onUpdateControl();
 
@@ -123,24 +136,10 @@ APPLEMIDI_CREATE_INSTANCE(WiFiUDP, AppleMIDI); // see definition in AppleMidi_De
 void OnAppleMidiControlChange(byte channel, byte note, byte value);
 #endif
 
-int StompLED_Blue = D3;
-int StompLED_Red = D7;
-
 void setup() {
 
   //160MHZ clock speed
   system_update_cpu_freq(160);
-
-  //Turn on some LEDs
-  pinMode(D5,INPUT_PULLUP);
-  pinMode(D6,OUTPUT);
-  digitalWrite(D6,HIGH);
-
-  pinMode(StompLED_Blue,OUTPUT);
-  digitalWrite(StompLED_Blue,LOW);
-
-  pinMode(StompLED_Red,OUTPUT);
-  digitalWrite(StompLED_Red,HIGH);
 
 #ifdef ENABLE_WIFI
   WiFi.begin(ssid, pass);
@@ -173,6 +172,7 @@ void setup() {
 
   //Control timer (update pots)
   potTimer.attach_ms(20, onUpdateControl); //Read potentio control at 20ms interval
+
 
 }
 
@@ -251,12 +251,12 @@ void ICACHE_RAM_ATTR onTimerISR() {
 //              DAC = t*(t^t+(t>>pot_control[2]|1)^(t-1280^t)>>10);
 //              DAC = (t*5&t>>7)|(t*3&t>>10);
 //              DAC = (t*9&t>>4|t*5&t>>7|t*3&t/1024)-1;
-              DAC = (t>>6|t|t>>(t>>potc[2]))*10+((t>>potc[3])&7);
+//              DAC = (t>>6|t|t>>(t>>potc[2]))*10+((t>>potc[3])&7);
 //              DAC = (((((DAC)<<potc[0]))));
 //              tc++;
-              t = tc + INCREMENTS[potc[0]];
+//              t = tc + INCREMENTS[potc[0]];
 
-         DAC = mysynth.run(i);
+                DAC = mysynth.run(i);
 
 //              i2s_write_lr_nb((((((DAC)<<8) ^ 32768))),0);
 //              i2s_write_lr_nb(DAC^0x8000,0);
@@ -267,10 +267,16 @@ void ICACHE_RAM_ATTR onTimerISR() {
 //              i2s_write_lr_nb((((((tmp)<<8)))),0);
 
 
-                sample[0] = (DAC-0x8000); //normalize
-                sample[1] = sample[0];
+
                 //i2s_write_lr_nb( sample[0], sample[1]);
-                soundOut.ConsumeSample(sample);
+
+                #ifdef USE_PDM
+                    writeDAC(DAC);
+                #else
+                    sample[0] = (DAC-0x8000); //normalize
+                    sample[1] = sample[0];
+                    soundOut.ConsumeSample(sample);
+                #endif
 
             }
         }
@@ -279,8 +285,7 @@ void ICACHE_RAM_ATTR onTimerISR() {
 }
 
 void loop() {
-   if (digitalRead(D5)==0) digitalWrite(StompLED_Red,LOW);
-   if (digitalRead(D5)==1) digitalWrite(StompLED_Red,HIGH);
+
 #ifdef ENABLE_OTA
     ArduinoOTA.handle();
 #endif

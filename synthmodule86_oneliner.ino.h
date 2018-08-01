@@ -13,7 +13,9 @@
 
 //define ENABLE_OTA
 //#define ENABLE_APPLEMIDI
+
 //#define ENABLE_WIFI
+//#define USE_PDM
 
 #ifdef ENABLE_OTA
 #include <ArduinoOTA.h>
@@ -71,10 +73,23 @@ bool ICACHE_FLASH_ATTR i2s_write_lr_nb(int16_t left, int16_t right){
   return i2s_write_sample_nb(sample);
 }
 
-//#include "EquationBankPtah.h";
-//#include "EquationBankKhepri.h";
+#ifdef USE_PDM
+//PDM From Jan Ostman
+void writeDAC(uint16_t DAC) {
+  for (uint8_t i=0;i<32;i++) {
+    i2sACC=i2sACC<<1;
+    if(DAC >= err) {
+      i2sACC|=1;
+      err += 0xFFFF-DAC;
+    } else {
+      err -= DAC;
+    }
+  }
+  bool flag=i2s_write_sample(i2sACC);
+}
+#endif
 
-//EquationBankPtah ptah;
+
 uint16_t potc[] = {1,1,1,1,1,1,1,1};
 
 //uint16_t sine2[256] = {
@@ -113,7 +128,7 @@ uint16_t potc[] = {1,1,1,1,1,1,1,1};
 //};
 
 
-//Forward declatation
+//Forward declaration
 void ICACHE_RAM_ATTR onTimerISR();
 void onUpdateControl();
 
@@ -247,31 +262,36 @@ void ICACHE_RAM_ATTR onTimerISR() {
             {
 //              snd =  ((t>>(potc[0]>>4))&(t<<3)/(t*potc[1]*(t>>11)%(3+((t>>(16-(potc[2]>>4)))%22))));
 //              DAC = (uint16_t) ptah.compute2(potc[3], t, 1+potc[0], 1+potc[2], 1+potc[1]);
-//              DAC = (t*5&t>>potc[0])|(t*3&t>>potc[1]);
-//              DAC = t*(t^t+(t>>pot_control[2]|1)^(t-1280^t)>>10);
-//              DAC = (t*5&t>>7)|(t*3&t>>10);
+//            DAC = (t*5&t>>potc[2])|(t*3&t>>potc[1]);
+//              DAC = t*(t^t+(t>>potc[2]|1)^(t-1280^t)>>10);
+           DAC = (t*5&t>>(potc[2]>>5))|(t*3&t>>(potc[1]>>5));
 //              DAC = (t*9&t>>4|t*5&t>>7|t*3&t/1024)-1;
-              DAC = (t>>6|t|t>>(t>>potc[2]))*10+((t>>potc[3])&7);
+  //            DAC = (t>>6|t|t>>(t>>potc[2]))*10+((t>>potc[1])&7);
 //              DAC = (((((DAC)<<potc[0]))));
               tc++;
               t = tc + INCREMENTS[potc[0]];
+              i2s_write_lr_nb((((((DAC)<<8) ^ 32768))),0);
+              digitalWrite(StompLED_Red,DAC%2);
 
-//                DAC = mysynth.run(i);
+//         DAC = mysynth.run(i);
 
-//              i2s_write_lr_nb((((((DAC)<<8) ^ 32768))),0);
 //              i2s_write_lr_nb(DAC^0x8000,0);
 //              phase = phase + 1;
 //              int16_t  tmp2 = ((sine2[phase]^0x8000))-0x8000;
 //              i2s_write_lr_nb((((((tmp2>>1)<<0)))),0);
 //              int16_t  tmp = ((sine3[(tc<<2)%512]))-127;
 //              i2s_write_lr_nb((((((tmp)<<8)))),0);
+//              i2s_write_lr_nb( sample[0], sample[1]);
 
-
-                sample[0] = (DAC-0x8000); //normalize
-                sample[1] = sample[0];
-                //i2s_write_lr_nb( sample[0], sample[1]);
-                soundOut.ConsumeSample(sample);
-
+/*
+                #ifdef USE_PDM
+                    writeDAC(DAC);
+                #else
+                    sample[0] = (DAC-0x8000); //normalize
+                    sample[1] = sample[0];
+                    soundOut.ConsumeSample(sample);
+                #endif
+*/
             }
         }
         timer1_write(AUDIOBLOCK_RATE); // Render next block in... ms..
@@ -279,8 +299,8 @@ void ICACHE_RAM_ATTR onTimerISR() {
 }
 
 void loop() {
-   if (digitalRead(D5)==0) digitalWrite(StompLED_Red,LOW);
-   if (digitalRead(D5)==1) digitalWrite(StompLED_Red,HIGH);
+   //if (digitalRead(D5)==0) digitalWrite(StompLED_Red,LOW);
+   //if (digitalRead(D5)==1) digitalWrite(StompLED_Red,HIGH);
 #ifdef ENABLE_OTA
     ArduinoOTA.handle();
 #endif

@@ -1,0 +1,202 @@
+EESchema Schematic File Version 2
+LIBS:power
+LIBS:device
+LIBS:transistors
+LIBS:conn
+LIBS:linear
+LIBS:regul
+LIBS:74xx
+LIBS:cmos4000
+LIBS:adc-dac
+LIBS:memory
+LIBS:xilinx
+LIBS:microcontrollers
+LIBS:dsp
+LIBS:microchip
+LIBS:analog_switches
+LIBS:motorola
+LIBS:texas
+LIBS:intel
+LIBS:audio
+LIBS:interface
+LIBS:digital-audio
+LIBS:philips
+LIBS:display
+LIBS:cypress
+LIBS:siliconi
+LIBS:opto
+LIBS:atmel
+LIBS:contrib
+LIBS:valves
+LIBS:ESP8266
+LIBS:switches
+LIBS:ESP-Synth86-cache
+EELAYER 25 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L LED_Dual_CCA D1
+U 1 1 5B59B183
+P 6450 3000
+F 0 "D1" H 6450 3225 50  0000 C CNN
+F 1 "LED_Dual_CCA" H 6450 2750 50  0000 C CNN
+F 2 "8BitMixtape_Stomp:Stomp_LED-Ring_DUAL" H 6500 3000 50  0001 C CNN
+F 3 "" H 6500 3000 50  0001 C CNN
+	1    6450 3000
+	-1   0    0    1   
+$EndComp
+$Comp
+L JACK_TRS_6PINS Jack1
+U 1 1 5B59B260
+P 1750 1450
+F 0 "Jack1" H 1750 1850 50  0000 C CNN
+F 1 "JACK_TRS_6PINS" H 1700 1150 50  0000 C CNN
+F 2 "8BitMixtape_DIY-CAD:AUDIO-Jack_3.5mm_5Pin" H 1850 1300 50  0001 C CNN
+F 3 "" H 1850 1300 50  0001 C CNN
+	1    1750 1450
+	1    0    0    -1  
+$EndComp
+$Comp
+L 4051 IC1
+U 1 1 5B59B467
+P 3350 2000
+F 0 "IC1" H 3450 2000 50  0000 C CNN
+F 1 "4051" H 3450 1800 50  0000 C CNN
+F 2 "Housings_DIP:DIP-16_W7.62mm_Socket_LongPads" H 3350 2000 60  0001 C CNN
+F 3 "" H 3350 2000 60  0001 C CNN
+	1    3350 2000
+	1    0    0    -1  
+$EndComp
+$Comp
+L Rotary_Encoder_Switch SW1
+U 1 1 5B59B5A0
+P 7300 5400
+F 0 "SW1" H 7300 5660 50  0000 C CNN
+F 1 "Rotary_Encoder_Switch" H 7300 5140 50  0000 C CNN
+F 2 "SparkFun-Electromechanical:ENCODER_LED_3_KIT" H 7200 5560 50  0001 C CNN
+F 3 "" H 7300 5660 50  0001 C CNN
+	1    7300 5400
+	1    0    0    -1  
+$EndComp
+$Comp
+L POT Pot1
+U 1 1 5B59B5FB
+P 6450 1950
+F 0 "Pot1" V 6275 1950 50  0000 C CNN
+F 1 "10k_big" V 6350 1950 50  0000 C CNN
+F 2 "8BitMixtape_Stomp:Mixtape_Pot_Alps_RK09L_Sleve_Single_Horizontal" H 6450 1950 50  0001 C CNN
+F 3 "" H 6450 1950 50  0001 C CNN
+	1    6450 1950
+	1    0    0    -1  
+$EndComp
+$Comp
+L POT Pot2
+U 1 1 5B59B67B
+P 5950 1350
+F 0 "Pot2" V 5775 1350 50  0000 C CNN
+F 1 "10k" V 5850 1350 50  0000 C CNN
+F 2 "8BitMixtape_Stomp:Mixtape_Pot_Alps_RK09K_Horizontal" H 5950 1350 50  0001 C CNN
+F 3 "" H 5950 1350 50  0001 C CNN
+	1    5950 1350
+	1    0    0    -1  
+$EndComp
+$Comp
+L POT Pot3
+U 1 1 5B59B6D5
+P 6450 1150
+F 0 "Pot3" V 6275 1150 50  0000 C CNN
+F 1 "10k" V 6350 1150 50  0000 C CNN
+F 2 "8BitMixtape_Stomp:Mixtape_Pot_Alps_RK09K_Horizontal" H 6450 1150 50  0001 C CNN
+F 3 "" H 6450 1150 50  0001 C CNN
+	1    6450 1150
+	1    0    0    -1  
+$EndComp
+$Comp
+L POT Pot4
+U 1 1 5B59B714
+P 6950 1350
+F 0 "Pot4" V 6775 1350 50  0000 C CNN
+F 1 "10k" V 6850 1350 50  0000 C CNN
+F 2 "8BitMixtape_Stomp:Mixtape_Pot_Alps_RK09K_Horizontal" H 6950 1350 50  0001 C CNN
+F 3 "" H 6950 1350 50  0001 C CNN
+	1    6950 1350
+	1    0    0    -1  
+$EndComp
+$Comp
+L JACK_TRS_6PINS Jack2
+U 1 1 5B59B804
+P 1750 2500
+F 0 "Jack2" H 1750 2900 50  0000 C CNN
+F 1 "JACK_TRS_6PINS" H 1700 2200 50  0000 C CNN
+F 2 "8BitMixtape_DIY-CAD:AUDIO-JACK-3.5mm_SMD" H 1850 2350 50  0001 C CNN
+F 3 "" H 1850 2350 50  0001 C CNN
+	1    1750 2500
+	1    0    0    -1  
+$EndComp
+$Comp
+L JACK_TRS_6PINS Jack3
+U 1 1 5B59B8A3
+P 10250 1300
+F 0 "Jack3" H 10250 1700 50  0000 C CNN
+F 1 "JACK_TRS_6PINS" H 10200 1000 50  0000 C CNN
+F 2 "8BitMixtape_DIY-CAD:AUDIO-JACK-3.5mm_SMD" H 10350 1150 50  0001 C CNN
+F 3 "" H 10350 1150 50  0001 C CNN
+	1    10250 1300
+	-1   0    0    1   
+$EndComp
+$Comp
+L NodeMCU_1.0_(ESP-12E) U1
+U 1 1 5B59CA5D
+P 3350 5050
+F 0 "U1" H 3350 5900 60  0000 C CNN
+F 1 "NodeMCU_1.0_(ESP-12E)" H 3350 4200 60  0000 C CNN
+F 2 "8BitMixtapes_all:NodeMCU_Amica_R2" H 2750 4200 60  0000 C CNN
+F 3 "" H 2750 4200 60  0000 C CNN
+	1    3350 5050
+	1    0    0    -1  
+$EndComp
+$Comp
+L DAC7513_DCN IC2
+U 1 1 5B59CC9F
+P 9000 1400
+F 0 "IC2" H 8900 1875 50  0000 R CNN
+F 1 "DAC7513_DCN" H 8900 1800 50  0000 R CNN
+F 2 "Housings_SOIC:SOIC-8_3.9x4.9mm_Pitch1.27mm" H 9050 1000 50  0001 L CNN
+F 3 "" H 9000 1400 50  0001 C CNN
+	1    9000 1400
+	1    0    0    -1  
+$EndComp
+$Comp
+L SW_Push SW2
+U 1 1 5B59CE3E
+P 6000 2400
+F 0 "SW2" H 6050 2500 50  0000 L CNN
+F 1 "SW_Push" H 6000 2340 50  0000 C CNN
+F 2 "8BitMixtape_Stomp:SW_PUSH-12mm_3D" H 6000 2600 50  0001 C CNN
+F 3 "" H 6000 2600 50  0001 C CNN
+	1    6000 2400
+	1    0    0    -1  
+$EndComp
+$Comp
+L SW_Push SW3
+U 1 1 5B59CFFD
+P 6850 2400
+F 0 "SW3" H 6900 2500 50  0000 L CNN
+F 1 "SW_Push" H 6850 2340 50  0000 C CNN
+F 2 "8BitMixtape_Stomp:SW_PUSH-12mm_3D" H 6850 2600 50  0001 C CNN
+F 3 "" H 6850 2600 50  0001 C CNN
+	1    6850 2400
+	1    0    0    -1  
+$EndComp
+$EndSCHEMATC
